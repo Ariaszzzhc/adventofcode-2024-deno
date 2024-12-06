@@ -1,28 +1,25 @@
-import { toReadableStream } from "@std/io";
-import { toLines } from "@std/streams/unstable-to-lines";
+import { readlines } from "../utils.ts";
 
-await using file = await Deno.open("input/day1.txt");
+export async function part1() {
+  const lines = readlines("input/day1.txt");
 
-const inputStream = toReadableStream(file);
+  const left = [];
+  const right = [];
 
-const lines = toLines(inputStream);
+  for await (const line of lines) {
+    const nums = line.split("   ");
+    left.push(parseInt(nums[0]));
+    right.push(parseInt(nums[1]));
+  }
 
-const left = [];
-const right = [];
+  left.sort();
+  right.sort();
 
-for await (const line of lines) {
-  const nums = line.split("   ");
-  left.push(parseInt(nums[0]));
-  right.push(parseInt(nums[1]));
+  let sum = 0;
+
+  for (let i = 0; i < left.length; i++) {
+    sum += Math.abs(left[i] - right[i]);
+  }
+
+  return sum;
 }
-
-left.sort();
-right.sort();
-
-let sum = 0;
-
-for (let i = 0; i < left.length; i++) {
-  sum += Math.abs(left[i] - right[i]);
-}
-
-console.log(sum);
